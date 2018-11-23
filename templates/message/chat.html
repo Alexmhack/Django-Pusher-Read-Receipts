@@ -112,4 +112,77 @@
         </div>
     </div>
 
+    <script>
+    var pusher = new Pusher('b3687ab4-115b-40a1-aeaf-431e117cbb35',{
+      cluster: 'v1:us1:b3687ab4-115b-40a1-aeaf-431e117cbb35'
+    });
+    var socketId = null;
+    pusher.connection.bind('connected', function() {
+        socketId = pusher.connection.socket_id;
+
+    });
+
+    var my_channel = pusher.subscribe('a_channel');
+    var config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } };
+    new Vue({
+        el: "#app",
+        data: {
+                'message': '',
+                'conversations': []
+        },
+        mounted() {
+            this.getConversations();
+            this.listen();
+
+        },
+        methods: {
+            sendMessage() {
+                axios.post('/conversation', this.queryParams({message: this.message}), config)
+                    .then(response => {
+                        this.message = '';
+                    });
+            },
+            getConversations() {
+                axios.get('/conversations').then((response) => {
+                    this.conversations = response.data;
+                    this.readall();
+                });  
+            },
+            listen() {
+                my_channel.bind("an_event", (data)=> {
+                    this.conversations.push(data);
+                    axios.post('/conversations/'+ data.id +'/delivered', this.queryParams({socket_id: socketId}));
+                })
+
+                 my_channel.bind("delivered_message", (data)=> {
+                    for(var i=0; i < this.conversations.length; i++){
+                        if (this.conversations[i].id == data.id){
+                            this.conversations[i].status = data.status;
+                        }
+                    }
+
+                })
+            },
+            readall(){
+
+                  for(var i=0; i < this.conversations.length; i++){
+                        if(this.conversations[i].status=='Sent'){
+                            axios.post('/conversations/'+ this.conversations[i].id +'/delivered');
+                        }
+                    }
+
+            },
+            queryParams(source) {
+                var array = [];
+
+                for(var key in source) {
+                    array.push(encodeURIComponent(key) + "=" + encodeURIComponent(source[key]));
+                }
+
+                return array.join("&");
+                }
+        }
+    });
+    </script>
+
 {% endblock %}
