@@ -19,3 +19,15 @@ def index_view(request):
 
 def chat_admin_view(request):
 	return render(request, 'chat_admin.html')
+
+
+def guest_user(request):
+	name = request.POST.get('name', '')
+	email = request.POST.get('email', '')
+
+	pusher.trigger('general-channel', 'new-guest-details', {
+		'name': name,
+		'email': email
+	})
+
+	return JsonResponse({'name': name, 'email': email})
