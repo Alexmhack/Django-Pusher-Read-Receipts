@@ -6,14 +6,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Spin Spinner Spinnest!</title>
+    <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 
 <body>
-    {% include "navbar.html" %}
-
     {% block content %}
 
     {% endblock %}
