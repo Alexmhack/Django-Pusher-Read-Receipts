@@ -13,6 +13,10 @@
 </head>
 
 <body>
+    {% block include %}
+
+    {% endblock %}
+
     {% block content %}
 
     {% endblock %}
@@ -21,7 +25,7 @@
     <script src="{% static 'js/popper.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'js/axios.js' %}"></script>
-    <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'js/chat.js' %}"></script>
 </body>
 
 </html>

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Django Website{% endblock %}
 
@@ -6,7 +7,9 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
 {% endblock %}
 
-{% include "navbar.html" %}
+{% block include %}
+    {% include "navbar.html" %}
+{% endblock %}
 
 {% block content %}
 
