@@ -14,7 +14,7 @@ pusher = Pusher(
 
 
 def index_view(request):
-	return render(request, 'index.html')
+	return render(request, 'chats/index.html')
 
 
 def chat_admin_view(request):
