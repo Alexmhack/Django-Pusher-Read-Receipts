@@ -1,0 +1,28 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Spin Spinner Spinnest!</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+
+<body>
+    {% include "navbar.html" %}
+
+    {% block content %}
+
+    {% endblock %}
+    <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/popper.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/axios.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+
+</html>
