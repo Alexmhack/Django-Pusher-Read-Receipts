@@ -31,3 +31,12 @@ def guest_user(request):
 	})
 
 	return JsonResponse({'name': name, 'email': email})
+
+
+def pusher_authentication(request):
+	channel_name = request.POST.get('channel_name')
+	socket_id = request.POST.get('socket_id')
+
+	auth = pusher.authenticate(channel=channel_name, socket_id=socket_id)
+
+	return JsonResponse({'channel_name': channel_name, 'socket_id': socket_id})
