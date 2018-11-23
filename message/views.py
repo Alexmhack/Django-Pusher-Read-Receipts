@@ -50,3 +50,25 @@ def conversations(request):
 
 	# return json response of broadcasted messages
 	return JsonResponse(con_data)
+
+
+@csrf_exempt
+def delivered(request, id):
+	message = Conversation.objects.get(id=id)
+
+	if request.user.id != message.user.id:
+		socket_id = request.POST.get('socket_id', '')
+		message.status = 'Delivered'
+		message.save()
+
+		push_msg = {
+			'name': message.user.username,
+			'status': message.status,
+			'message': message.message,
+			'id': message.id,
+			'created_at': message.created_at
+		}
+		pusher.trigger('a_channel', 'delivered_message', message, socket_id)
+		return HttpResponse('OK')
+	else:
+		return HttpResponse('Awaiting Delivery')
