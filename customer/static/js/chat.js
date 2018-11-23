@@ -1,9 +1,29 @@
 (function() {
     'use strict';
 
-    var pusher = new Pusher('2', {
-        authEndpoint: '/pusher/auth',
-        cluster: 'us1',
+    var csrftoken = Cookies.get('csrftoken');
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    var pusher = new Pusher('399efdfd937640a8af99', {
+        authEndpoint: '/pusher/auth/',
+        auth: {
+            headers: {
+              'X-CSRFToken': csrftoken
+            }
+        },
+        cluster: 'ap2',
         encrypted: true
     });
 
@@ -135,15 +155,26 @@
             const name = $('#fullname').val().trim()
             const email = $('#email').val().trim().toLowerCase()
 
+            axios.defaults.xsrfHeaderName = "X-CSRFToken";
+
             // Disable the form
             chatBody.find('#loginScreenForm input, #loginScreenForm button').attr('disabled', true)
 
             if ((name !== '' && name.length >= 3) && (email !== '' && email.length >= 5)) {
-                axios.post('/new/guest', { name, email }).then(response => {
-                    chat.name = name
-                    chat.email = email
-                    chat.myChannel = pusher.subscribe('private-' + response.data.email);
-                    helpers.ShowAppropriateChatDisplay()
+                $.ajax({
+                    methods: 'post',
+                    url: '/new/guest/',
+                    data: { name, email },
+                    success: function(data) {
+                        console.log(data);
+                        chat.name = data.name
+                        chat.email = data.email
+                        chat.myChannel = pusher.subscribe('private-' + data.email);
+                        helpers.ShowAppropriateChatDisplay()
+                    },
+                    error: function(err) {
+                        console.error(err);
+                    }
                 })
             } else {
                 alert('Enter a valid name and email.')

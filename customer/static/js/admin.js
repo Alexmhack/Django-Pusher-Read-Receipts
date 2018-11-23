@@ -1,13 +1,20 @@
 (function() {
     'use strict';
 
+    var csrftoken = Cookies.get('csrftoken');
+
     // ----------------------------------------------------
     // Configure Pusher instance
     // ----------------------------------------------------
 
-    var pusher = new Pusher('2', {
-        authEndpoint: '/pusher/auth',
-        cluster: 'us1',
+    var pusher = new Pusher('399efdfd937640a8af99', {
+        authEndpoint: '/pusher/auth/',
+        auth: {
+            headers: {
+              'X-CSRFToken': csrftoken
+            }
+        },
+        cluster: 'ap2',
         encrypted: true
     });
 

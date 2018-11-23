@@ -20,12 +20,15 @@
     {% block content %}
 
     {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://js.pusher.com/4.0/pusher.min.js"></script>
-    <script src="{% static 'js/jquery.js' %}"></script>
+    <!-- <script src="{% static 'js/jquery.js' %}"></script> -->
     <script src="{% static 'js/popper.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'js/axios.js' %}"></script>
-    <script src="{% static 'js/chat.js' %}"></script>
+    {% block script %}
+    {% endblock %}
 </body>
 
 </html>
