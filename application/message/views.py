@@ -4,14 +4,17 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse
 
 from pusher import Pusher
+from decouple import config
+
 from .models import Conversation
 
 # instantiate pusher
 pusher = Pusher(
-	app_id='b3687ab4-115b-40a1-aeaf-431e117cbb35',
-	key='b3687ab4-115b-40a1-aeaf-431e117cbb35',
-	secret='cBBp5PhCPL82Ff4mEuGYxwb0jaTdnSaZf/O7dK0gTgI=',
-	cluster='v1:us1:b3687ab4-115b-40a1-aeaf-431e117cbb35')
+	app_id=config('PUSHER_APP_ID'),
+	key=config('PUSHER_KEY'),
+	secret=config('PUSHER_SECRET'),
+	cluster=config('PUSHER_CLUSTER')
+)
 
 @login_required()
 def index(request):
@@ -29,7 +32,7 @@ def broadcast(request):
 		'status': message.status,
 		'message': message.message,
 		'id': message.id,
-		'created_at': message.created_at
+		'created_at': message.created_at.strftime("%I %d")
 	}
 
 	# trigger the message channel and event to pusher
@@ -45,7 +48,7 @@ def conversations(request):
 		'status': message.status,
 		'message': message.message,
 		'id': message.id,
-		'created_at': message.created_at
+		'created_at': message.created_at.strftime("%I %d")
 	} for message in data]
 
 	# return json response of broadcasted messages
@@ -66,7 +69,7 @@ def delivered(request, id):
 			'status': message.status,
 			'message': message.message,
 			'id': message.id,
-			'created_at': message.created_at
+			'created_at': message.created_at.strftime("%I %d")
 		}
 		pusher.trigger('a_channel', 'delivered_message', message, socket_id)
 		return HttpResponse('OK')
