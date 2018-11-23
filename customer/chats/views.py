@@ -11,3 +11,11 @@ pusher = Pusher(
 	cluster=config('PUSHER_CLUSTER'),
 	ssl=True
 )
+
+
+def index_view(request):
+	return render(request, 'index.html')
+
+
+def chat_admin_view(request):
+	return render(request, 'chat_admin.html')
