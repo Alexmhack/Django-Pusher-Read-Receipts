@@ -2,6 +2,10 @@
 
 {% block title %}Django Website{% endblock %}
 
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+{% endblock %}
+
 {% include "navbar.html" %}
 
 {% block content %}
